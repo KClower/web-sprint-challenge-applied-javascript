@@ -1,5 +1,37 @@
+
+import axios from "axios"
+
 const Card = (article) => {
   // TASK 5
+
+  const card = document.createElement("div");
+  const cardHeadLine = document.createElement("div");
+  const cardAuthor = document.createElement("div");
+  const cardImgContainer = document.createElement("div");
+  const cardImg = document.createElement("img");
+  const cardAuthorName = document.createElement("span");
+
+  card.classList.add("card");
+  cardHeadLine.classList.add("headline");
+  cardAuthor.classList.add("author");
+  cardImgContainer.classList.add("img-container");
+
+  cardHeadLine.textContent = article.headline;
+  cardImg.src = article.authorPhoto;
+  cardAuthorName.textContent = article.authorName
+
+  card.appendChild(cardHeadLine);
+  card.appendChild(cardAuthor);
+  cardAuthor.appendChild(cardImgContainer);
+  cardAuthor.appendChild(cardAuthorName);
+  cardImgContainer.appendChild(cardImg);
+
+  card.addEventListener("click", function (event) {
+    console.log(article.headline)
+  })
+
+  return card
+
   // ---------------------
   // Implement this function, which should return the markup you see below.
   // It takes as its only argument an "article" object with `headline`, `authorPhoto` and `authorName` properties.
@@ -17,9 +49,28 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
+
 }
 
 const cardAppender = (selector) => {
+  const entryPoint = document.querySelector(selector)
+  axios.get("http://localhost:5001/api/articles")
+    .then(response => {
+     
+      const keys = Object.keys(response.data.articles)
+     
+      keys.forEach(key => {
+        const posts = response.data.articles[key]
+        posts.forEach(post => {
+          const card = Card(post)
+          entryPoint.append(card)
+        })
+      })
+
+    }).catch(error => {
+      console.log(error)
+    });
+
   // TASK 6
   // ---------------------
   // Implement this function that takes a css selector as its only argument.
